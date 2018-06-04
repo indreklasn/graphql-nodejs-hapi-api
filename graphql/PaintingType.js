@@ -1,6 +1,6 @@
 const graphql = require('graphql');
 
-const { GraphQLObjectType, GraphQLString } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql;
 
 const PaintingType = new GraphQLObjectType({
     name: 'Painting',
@@ -8,7 +8,7 @@ const PaintingType = new GraphQLObjectType({
         id: { type: GraphQLString },
         name: { type: GraphQLString },
         url: { type: GraphQLString },
-        technique: { type: GraphQLString }
+        techniques: { type: new GraphQLList(GraphQLString) }
     })
 });
 
