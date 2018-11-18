@@ -33,5 +33,5 @@ npm add vision hapi-swagger
 ## to Run
 
 ```bash
-  node index.js
+npm start
 ```
