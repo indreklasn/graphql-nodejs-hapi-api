@@ -12,8 +12,8 @@ const Pack = require('./package');
 
 
 const server = hapi.server({
-	port: 4000,
-	host: 'localhost'
+	port: 3000,
+	host: '0.0.0.0'  // public
 });
 
 mongoose.connect('mongodb://indrek:test@ds231090.mlab.com:31090/powerful-api');
