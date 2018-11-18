@@ -14,7 +14,10 @@
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
-
+### Install hapi.js and nodemon
+```bash
+npm add hapi nodemon
+```
 ### Install mongoDb
 ```bash
 sudo apt install -y mongodb
