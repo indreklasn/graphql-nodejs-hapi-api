@@ -8,7 +8,8 @@ const {
 	GraphQLObjectType,
 	GraphQLString,
 	GraphQLSchema,
-	GraphQLList
+	GraphQLList,
+	GraphQLNonNull
 } = graphql;
 
 const RootQuery = new GraphQLObjectType({
@@ -39,6 +40,21 @@ const Mutation = new GraphQLObjectType({
 			resolve(parent,args){
 				const painting = new Painting({name : args.name , url : args.url})
 				return painting.save()
+			}
+		},
+		updatePainting: {
+			type: PaintingType,
+			args: { id: {type: GraphQLString} , name: {type: GraphQLString} , url : {type: GraphQLString}},
+			resolve(parent,args) {
+				Painting.findByIdAndUpdate(args.id , {name : args.name , url: args.url})
+				return Painting.findById(args.id)
+			}
+		},
+		deletePainting: {
+			type: PaintingType,
+			args: {id : {type : new  GraphQLNonNull(GraphQLString)}},
+			resolve(parent,args) {
+				return Painting.findByIdAndDelete(args.id)
 			}
 		}
 	}
