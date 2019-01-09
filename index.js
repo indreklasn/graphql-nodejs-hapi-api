@@ -6,7 +6,7 @@ const Painting = require('./models/Painting')
 const schema = require('./graphql/schema');
 const { ApolloServer } = require('apollo-server-express');
 const express = require('express');
-
+const bodyParser = require('body-parser');
 
 const Inert = require('inert')
 const Vision = require('vision')
@@ -24,6 +24,26 @@ mongoose.connection.once('open' , () => {
 const PORT = 4000;
 const app = express();
 const server = new ApolloServer({ schema});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : true}));
+
+
+
+app.route('/api/v1/paintings').get((req, reply) => {
+	return Painting.find().then(c => reply.json(c))
+}).post((req,reply) => {
+	const { name, url, technique } = req.body;
+				const painting = new Painting({
+					name,
+					url,
+					technique
+				});
+
+	painting.save().then(doc => reply.json(doc));
+})
+
+
 
 server.applyMiddleware({app})
 
