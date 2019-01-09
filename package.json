@@ -10,13 +10,18 @@
   "author": "Birand Koray Eren",
   "license": "ISC",
   "dependencies": {
+    "apollo-link-ws": "^1.0.12",
+    "apollo-server": "^2.3.1",
+    "apollo-server-express": "^2.3.1",
     "apollo-server-hapi": "^2.3.1",
+    "express": "^4.16.4",
     "graphql": "^14.0.2",
     "hapi": "^17.8.1",
     "hapi-swagger": "^9.3.0",
     "inert": "^5.1.2",
     "mongoose": "^5.4.2",
     "nodemon": "^1.18.9",
+    "subscriptions-transport-ws": "^0.9.15",
     "vision": "^5.4.4"
   }
 }
