@@ -14,7 +14,7 @@ const HapiSwagger = require('hapi-swagger')
 const Pack = require('./package')
 
 
-mongoose.connect('mongodb://birandkoray:calipso90@ds251284.mlab.com:51284/salmandoo',
+mongoose.connect('mongodb://birandkoray:<password>@ds251284.mlab.com:51284/salmandoo',
 	{ useNewUrlParser : true});
 
 mongoose.connection.once('open' , () => {
