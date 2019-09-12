@@ -1,7 +1,6 @@
-const hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 const mongoose = require('mongoose');
-const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi');
-const schema = require('./graphql/schema');
+const { ApolloServer, gql } = require('apollo-server');
 const Painting = require('./models/Painting');
 
 /* swagger section */
@@ -10,21 +9,46 @@ const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const Pack = require('./package');
 
-
-const server = hapi.server({
-	port: 4000,
-	host: 'localhost'
-});
-
 mongoose.connect('mongodb://indrek:test@ds231090.mlab.com:31090/powerful-api');
 
 mongoose.connection.once('open', () => {
 	console.log('connected to database');
 });
 
-const init = async () => {
+// The GraphQL schema
+const typeDefs = gql`
+  type Painting {
+    id: String
+    name: String
+    url: String
+    technique: String
+  }
+  type Query {
+	paintings: [Painting]
+	paintingsById(id: ID!): Painting
+  }
+`;
 
-	await server.register([
+// A map of functions which return data for the schema.
+const resolvers = {
+	Query: {
+		paintings: () => Painting.find(),
+		paintingsById: (obj, args) => Painting.findById(args.id)
+	},
+};
+
+async function StartServer() {
+	const server = new ApolloServer({ typeDefs, resolvers });
+
+	const app = new Hapi.server({
+		port: 3000
+	});
+
+	server.listen().then(({ url }) => {
+		console.log(`🚀 Server ready at ${url}`);
+	});
+
+	await app.register([
 		Inert,
 		Vision,
 		{
@@ -38,34 +62,7 @@ const init = async () => {
 		}
 	]);
 
-	await server.register({
-		plugin: graphiqlHapi,
-		options: {
-			path: '/graphiql',
-			graphiqlOptions: {
-				endpointURL: '/graphql'
-			},
-			route: {
-				cors: true
-			}
-		}
-	});
-
-	await server.register({
-		plugin: graphqlHapi,
-		options: {
-			path: '/graphql',
-			graphqlOptions: {
-				schema
-			},
-			route: {
-				cors: true
-			}
-		}
-	});
-
-
-	server.route([
+	app.route([
 		{
 			method: 'GET',
 			path: '/api/v1/paintings',
@@ -91,15 +88,14 @@ const init = async () => {
 					url,
 					technique
 				});
-
 				return painting.save();
 			}
 		}
 	]);
+	await app.start();
+}
 
-	await server.start();
-	console.log(`Server running at: ${server.info.uri}`);
-};
+StartServer().catch(error => console.log(error));
 
 process.on('unHandledRejection', (err) => {
 	if (err) {
@@ -107,5 +103,3 @@ process.on('unHandledRejection', (err) => {
 		process.exit(1);
 	}
 });
-
-init();
