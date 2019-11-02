@@ -15,7 +15,7 @@
     "hapi": "^17.4.0",
     "hapi-swagger": "^9.1.1",
     "inert": "^5.1.0",
-    "mongoose": "^5.1.1",
+    "mongoose": "^5.7.5",
     "nodemon": "^1.17.4",
     "vision": "^5.3.2"
   }
